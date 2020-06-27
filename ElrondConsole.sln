@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElrondConsoleLibrary", "ElrondConsoleLibrary\ElrondConsoleLibrary.csproj", "{86A78FD4-97CC-44ED-BED2-1E72A0C140E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElrondConsole", "ElrondConsole\ElrondConsole.csproj", "{DE7D5759-9656-489C-8939-F44B448BCB9C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{86A78FD4-97CC-44ED-BED2-1E72A0C140E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A78FD4-97CC-44ED-BED2-1E72A0C140E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A78FD4-97CC-44ED-BED2-1E72A0C140E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A78FD4-97CC-44ED-BED2-1E72A0C140E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE7D5759-9656-489C-8939-F44B448BCB9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE7D5759-9656-489C-8939-F44B448BCB9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE7D5759-9656-489C-8939-F44B448BCB9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE7D5759-9656-489C-8939-F44B448BCB9C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {608EDC59-5AF5-4737-9065-6D810752F06C}
+	EndGlobalSection
+EndGlobal
