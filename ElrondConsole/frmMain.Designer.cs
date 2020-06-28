@@ -53,8 +53,27 @@
             this.txtTransactionHash = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnGetTransactions = new System.Windows.Forms.Button();
+            this.groupTransactionSend = new System.Windows.Forms.GroupBox();
+            this.lblNonce = new System.Windows.Forms.Label();
+            this.txtNonce = new System.Windows.Forms.TextBox();
+            this.lblValue = new System.Windows.Forms.Label();
+            this.txtValue = new System.Windows.Forms.TextBox();
+            this.lblSender = new System.Windows.Forms.Label();
+            this.txtSender = new System.Windows.Forms.TextBox();
+            this.txtReceiver = new System.Windows.Forms.TextBox();
+            this.lblReceiver = new System.Windows.Forms.Label();
+            this.txtGasPrice = new System.Windows.Forms.TextBox();
+            this.lblGasPrice = new System.Windows.Forms.Label();
+            this.txtGasLimit = new System.Windows.Forms.TextBox();
+            this.lblGasLimit = new System.Windows.Forms.Label();
+            this.txtData = new System.Windows.Forms.TextBox();
+            this.lblData = new System.Windows.Forms.Label();
+            this.btnTransactionSend = new System.Windows.Forms.Button();
+            this.txtSignature = new System.Windows.Forms.TextBox();
+            this.lblSignature = new System.Windows.Forms.Label();
             this.groupResult.SuspendLayout();
             this.groupActions.SuspendLayout();
+            this.groupTransactionSend.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupResult
@@ -63,9 +82,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupResult.Controls.Add(this.txtResult);
-            this.groupResult.Location = new System.Drawing.Point(12, 180);
+            this.groupResult.Location = new System.Drawing.Point(12, 314);
             this.groupResult.Name = "groupResult";
-            this.groupResult.Size = new System.Drawing.Size(776, 258);
+            this.groupResult.Size = new System.Drawing.Size(776, 124);
             this.groupResult.TabIndex = 1;
             this.groupResult.TabStop = false;
             this.groupResult.Text = "Result";
@@ -75,7 +94,7 @@
             this.txtResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtResult.Location = new System.Drawing.Point(3, 16);
             this.txtResult.Name = "txtResult";
-            this.txtResult.Size = new System.Drawing.Size(770, 239);
+            this.txtResult.Size = new System.Drawing.Size(770, 105);
             this.txtResult.TabIndex = 0;
             // 
             // groupActions
@@ -105,7 +124,7 @@
             this.groupActions.Controls.Add(this.btnGetTransactions);
             this.groupActions.Location = new System.Drawing.Point(12, 12);
             this.groupActions.Name = "groupActions";
-            this.groupActions.Size = new System.Drawing.Size(773, 162);
+            this.groupActions.Size = new System.Drawing.Size(773, 155);
             this.groupActions.TabIndex = 2;
             this.groupActions.TabStop = false;
             this.groupActions.Text = "Actions";
@@ -129,6 +148,7 @@
             this.txtBlockNumber.Name = "txtBlockNumber";
             this.txtBlockNumber.Size = new System.Drawing.Size(370, 20);
             this.txtBlockNumber.TabIndex = 22;
+            this.txtBlockNumber.Enter += new System.EventHandler(this.txtBlockNumber_TextChanged);
             // 
             // label5
             // 
@@ -146,6 +166,7 @@
             this.txtBlockShardId.Size = new System.Drawing.Size(74, 20);
             this.txtBlockShardId.TabIndex = 20;
             this.txtBlockShardId.Text = "0";
+            this.txtBlockShardId.Enter += new System.EventHandler(this.txtBlockShardId_TextChanged);
             // 
             // linkMetachainStatus
             // 
@@ -170,7 +191,7 @@
             // btnConnect
             // 
             this.btnConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnConnect.Location = new System.Drawing.Point(696, 19);
+            this.btnConnect.Location = new System.Drawing.Point(580, 18);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(69, 20);
             this.btnConnect.TabIndex = 17;
@@ -184,9 +205,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtAccountAddress.Location = new System.Drawing.Point(115, 19);
             this.txtAccountAddress.Name = "txtAccountAddress";
-            this.txtAccountAddress.Size = new System.Drawing.Size(577, 20);
+            this.txtAccountAddress.Size = new System.Drawing.Size(459, 20);
             this.txtAccountAddress.TabIndex = 16;
             this.txtAccountAddress.Text = "erd1....";
+            this.txtAccountAddress.Enter += new System.EventHandler(this.txtAccountAddress_TextChanged);
             // 
             // lblAccountAddress
             // 
@@ -216,6 +238,7 @@
             this.txtNodeName.Name = "txtNodeName";
             this.txtNodeName.Size = new System.Drawing.Size(427, 20);
             this.txtNodeName.TabIndex = 13;
+            this.txtNodeName.Enter += new System.EventHandler(this.txtNodeName_TextChanged);
             // 
             // label3
             // 
@@ -242,7 +265,7 @@
             this.btnGetShardStatus.Name = "btnGetShardStatus";
             this.btnGetShardStatus.Size = new System.Drawing.Size(69, 20);
             this.btnGetShardStatus.TabIndex = 10;
-            this.btnGetShardStatus.Text = "Go";
+            this.btnGetShardStatus.Text = "Detail";
             this.btnGetShardStatus.UseVisualStyleBackColor = true;
             this.btnGetShardStatus.Click += new System.EventHandler(this.btnGetShardStatus_Click);
             // 
@@ -253,6 +276,7 @@
             this.txtShardId.Size = new System.Drawing.Size(74, 20);
             this.txtShardId.TabIndex = 9;
             this.txtShardId.Text = "0";
+            this.txtShardId.Enter += new System.EventHandler(this.txtShardId_TextChanged);
             // 
             // label2
             // 
@@ -288,15 +312,16 @@
             // 
             this.txtTransactionHash.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtTransactionHash.Location = new System.Drawing.Point(264, 46);
+            this.txtTransactionHash.Location = new System.Drawing.Point(140, 46);
             this.txtTransactionHash.Name = "txtTransactionHash";
-            this.txtTransactionHash.Size = new System.Drawing.Size(427, 20);
+            this.txtTransactionHash.Size = new System.Drawing.Size(551, 20);
             this.txtTransactionHash.TabIndex = 5;
+            this.txtTransactionHash.Enter += new System.EventHandler(this.txtTransactionHash_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(142, 49);
+            this.label1.Location = new System.Drawing.Point(18, 49);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(116, 13);
             this.label1.TabIndex = 4;
@@ -304,7 +329,8 @@
             // 
             // btnGetTransactions
             // 
-            this.btnGetTransactions.Location = new System.Drawing.Point(21, 45);
+            this.btnGetTransactions.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGetTransactions.Location = new System.Drawing.Point(655, 19);
             this.btnGetTransactions.Name = "btnGetTransactions";
             this.btnGetTransactions.Size = new System.Drawing.Size(111, 20);
             this.btnGetTransactions.TabIndex = 3;
@@ -312,11 +338,195 @@
             this.btnGetTransactions.UseVisualStyleBackColor = true;
             this.btnGetTransactions.Click += new System.EventHandler(this.btnGetTransactions_Click);
             // 
+            // groupTransactionSend
+            // 
+            this.groupTransactionSend.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupTransactionSend.Controls.Add(this.txtSignature);
+            this.groupTransactionSend.Controls.Add(this.lblSignature);
+            this.groupTransactionSend.Controls.Add(this.btnTransactionSend);
+            this.groupTransactionSend.Controls.Add(this.txtData);
+            this.groupTransactionSend.Controls.Add(this.lblData);
+            this.groupTransactionSend.Controls.Add(this.txtGasLimit);
+            this.groupTransactionSend.Controls.Add(this.lblGasLimit);
+            this.groupTransactionSend.Controls.Add(this.txtGasPrice);
+            this.groupTransactionSend.Controls.Add(this.lblGasPrice);
+            this.groupTransactionSend.Controls.Add(this.txtReceiver);
+            this.groupTransactionSend.Controls.Add(this.lblReceiver);
+            this.groupTransactionSend.Controls.Add(this.txtSender);
+            this.groupTransactionSend.Controls.Add(this.lblSender);
+            this.groupTransactionSend.Controls.Add(this.txtValue);
+            this.groupTransactionSend.Controls.Add(this.lblValue);
+            this.groupTransactionSend.Controls.Add(this.txtNonce);
+            this.groupTransactionSend.Controls.Add(this.lblNonce);
+            this.groupTransactionSend.Location = new System.Drawing.Point(12, 173);
+            this.groupTransactionSend.Name = "groupTransactionSend";
+            this.groupTransactionSend.Size = new System.Drawing.Size(776, 135);
+            this.groupTransactionSend.TabIndex = 3;
+            this.groupTransactionSend.TabStop = false;
+            this.groupTransactionSend.Text = "Transaction Send";
+            // 
+            // lblNonce
+            // 
+            this.lblNonce.AutoSize = true;
+            this.lblNonce.Location = new System.Drawing.Point(18, 25);
+            this.lblNonce.Name = "lblNonce";
+            this.lblNonce.Size = new System.Drawing.Size(42, 13);
+            this.lblNonce.TabIndex = 0;
+            this.lblNonce.Text = "Nonce:";
+            // 
+            // txtNonce
+            // 
+            this.txtNonce.Location = new System.Drawing.Point(84, 22);
+            this.txtNonce.Name = "txtNonce";
+            this.txtNonce.Size = new System.Drawing.Size(74, 20);
+            this.txtNonce.TabIndex = 21;
+            this.txtNonce.Text = "0";
+            // 
+            // lblValue
+            // 
+            this.lblValue.AutoSize = true;
+            this.lblValue.Location = new System.Drawing.Point(164, 25);
+            this.lblValue.Name = "lblValue";
+            this.lblValue.Size = new System.Drawing.Size(37, 13);
+            this.lblValue.TabIndex = 22;
+            this.lblValue.Text = "Value:";
+            // 
+            // txtValue
+            // 
+            this.txtValue.Location = new System.Drawing.Point(207, 22);
+            this.txtValue.Name = "txtValue";
+            this.txtValue.Size = new System.Drawing.Size(68, 20);
+            this.txtValue.TabIndex = 23;
+            this.txtValue.Text = "100000";
+            // 
+            // lblSender
+            // 
+            this.lblSender.AutoSize = true;
+            this.lblSender.Location = new System.Drawing.Point(281, 25);
+            this.lblSender.Name = "lblSender";
+            this.lblSender.Size = new System.Drawing.Size(44, 13);
+            this.lblSender.TabIndex = 24;
+            this.lblSender.Text = "Sender:";
+            // 
+            // txtSender
+            // 
+            this.txtSender.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSender.Location = new System.Drawing.Point(331, 22);
+            this.txtSender.Name = "txtSender";
+            this.txtSender.Size = new System.Drawing.Size(434, 20);
+            this.txtSender.TabIndex = 25;
+            this.txtSender.Text = "erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz";
+            // 
+            // txtReceiver
+            // 
+            this.txtReceiver.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtReceiver.Location = new System.Drawing.Point(332, 48);
+            this.txtReceiver.Name = "txtReceiver";
+            this.txtReceiver.Size = new System.Drawing.Size(434, 20);
+            this.txtReceiver.TabIndex = 27;
+            this.txtReceiver.Text = "erd188nydpkagtpwvfklkl2tn0w6g40zdxkwfgwpjqc2a2m2n7ne9g8q2t22sr";
+            // 
+            // lblReceiver
+            // 
+            this.lblReceiver.AutoSize = true;
+            this.lblReceiver.Location = new System.Drawing.Point(273, 51);
+            this.lblReceiver.Name = "lblReceiver";
+            this.lblReceiver.Size = new System.Drawing.Size(53, 13);
+            this.lblReceiver.TabIndex = 26;
+            this.lblReceiver.Text = "Receiver:";
+            // 
+            // txtGasPrice
+            // 
+            this.txtGasPrice.Location = new System.Drawing.Point(84, 75);
+            this.txtGasPrice.Name = "txtGasPrice";
+            this.txtGasPrice.Size = new System.Drawing.Size(74, 20);
+            this.txtGasPrice.TabIndex = 29;
+            this.txtGasPrice.Text = "200000000000";
+            // 
+            // lblGasPrice
+            // 
+            this.lblGasPrice.AutoSize = true;
+            this.lblGasPrice.Location = new System.Drawing.Point(18, 78);
+            this.lblGasPrice.Name = "lblGasPrice";
+            this.lblGasPrice.Size = new System.Drawing.Size(56, 13);
+            this.lblGasPrice.TabIndex = 28;
+            this.lblGasPrice.Text = "Gas Price:";
+            // 
+            // txtGasLimit
+            // 
+            this.txtGasLimit.Location = new System.Drawing.Point(217, 74);
+            this.txtGasLimit.Name = "txtGasLimit";
+            this.txtGasLimit.Size = new System.Drawing.Size(58, 20);
+            this.txtGasLimit.TabIndex = 31;
+            this.txtGasLimit.Text = "50000000";
+            // 
+            // lblGasLimit
+            // 
+            this.lblGasLimit.AutoSize = true;
+            this.lblGasLimit.Location = new System.Drawing.Point(158, 78);
+            this.lblGasLimit.Name = "lblGasLimit";
+            this.lblGasLimit.Size = new System.Drawing.Size(53, 13);
+            this.lblGasLimit.TabIndex = 30;
+            this.lblGasLimit.Text = "Gas Limit:";
+            // 
+            // txtData
+            // 
+            this.txtData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtData.Location = new System.Drawing.Point(332, 74);
+            this.txtData.Name = "txtData";
+            this.txtData.Size = new System.Drawing.Size(433, 20);
+            this.txtData.TabIndex = 33;
+            // 
+            // lblData
+            // 
+            this.lblData.AutoSize = true;
+            this.lblData.Location = new System.Drawing.Point(281, 77);
+            this.lblData.Name = "lblData";
+            this.lblData.Size = new System.Drawing.Size(33, 13);
+            this.lblData.TabIndex = 32;
+            this.lblData.Text = "Data:";
+            // 
+            // btnTransactionSend
+            // 
+            this.btnTransactionSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTransactionSend.Location = new System.Drawing.Point(696, 101);
+            this.btnTransactionSend.Name = "btnTransactionSend";
+            this.btnTransactionSend.Size = new System.Drawing.Size(69, 20);
+            this.btnTransactionSend.TabIndex = 34;
+            this.btnTransactionSend.Text = "Send";
+            this.btnTransactionSend.UseVisualStyleBackColor = true;
+            this.btnTransactionSend.Click += new System.EventHandler(this.btnTransactionSend_Click);
+            // 
+            // txtSignature
+            // 
+            this.txtSignature.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSignature.Location = new System.Drawing.Point(84, 101);
+            this.txtSignature.Name = "txtSignature";
+            this.txtSignature.Size = new System.Drawing.Size(606, 20);
+            this.txtSignature.TabIndex = 36;
+            this.txtSignature.Text = "730adffa16af2c8e7e4b80235ca0c337faa27e08571ba64792b25173966d9d29ce5d0b34a826cf8ca" +
+    "3f0ea76a08e8cff448ab1174c19a3247fb703ac0d1a6003";
+            // 
+            // lblSignature
+            // 
+            this.lblSignature.AutoSize = true;
+            this.lblSignature.Location = new System.Drawing.Point(22, 104);
+            this.lblSignature.Name = "lblSignature";
+            this.lblSignature.Size = new System.Drawing.Size(55, 13);
+            this.lblSignature.TabIndex = 35;
+            this.lblSignature.Text = "Signature:";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.groupTransactionSend);
             this.Controls.Add(this.groupActions);
             this.Controls.Add(this.groupResult);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -329,6 +539,8 @@
             this.groupResult.ResumeLayout(false);
             this.groupActions.ResumeLayout(false);
             this.groupActions.PerformLayout();
+            this.groupTransactionSend.ResumeLayout(false);
+            this.groupTransactionSend.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -358,6 +570,24 @@
         private System.Windows.Forms.TextBox txtBlockNumber;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtBlockShardId;
+        private System.Windows.Forms.GroupBox groupTransactionSend;
+        private System.Windows.Forms.Button btnTransactionSend;
+        private System.Windows.Forms.TextBox txtData;
+        private System.Windows.Forms.Label lblData;
+        private System.Windows.Forms.TextBox txtGasLimit;
+        private System.Windows.Forms.Label lblGasLimit;
+        private System.Windows.Forms.TextBox txtGasPrice;
+        private System.Windows.Forms.Label lblGasPrice;
+        private System.Windows.Forms.TextBox txtReceiver;
+        private System.Windows.Forms.Label lblReceiver;
+        private System.Windows.Forms.TextBox txtSender;
+        private System.Windows.Forms.Label lblSender;
+        private System.Windows.Forms.TextBox txtValue;
+        private System.Windows.Forms.Label lblValue;
+        private System.Windows.Forms.TextBox txtNonce;
+        private System.Windows.Forms.Label lblNonce;
+        private System.Windows.Forms.TextBox txtSignature;
+        private System.Windows.Forms.Label lblSignature;
     }
 }
 

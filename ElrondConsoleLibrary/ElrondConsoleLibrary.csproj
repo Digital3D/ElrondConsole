@@ -42,8 +42,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,6 +63,7 @@
     <Compile Include="Model\NetworkConfigModel.cs" />
     <Compile Include="Model\TransactionDetailModel.cs" />
     <Compile Include="Model\AccountTransactionModel.cs" />
+    <Compile Include="Model\TransactionSendModel.cs" />
     <Compile Include="Service\MainService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

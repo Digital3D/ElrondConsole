@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ElrondConsoleLibrary.Model;
 using Newtonsoft.Json;
@@ -17,6 +16,21 @@ namespace ElrondConsoleLibrary
     {
         private string _apiUrl = "https://api.elrond.com";
         private Logger _log = LogManager.GetCurrentClassLogger();
+
+        public string GetSignature(string parameters)
+        {
+            byte[] originalData = Encoding.ASCII.GetBytes(parameters);
+            string signature = ByteToString(originalData);
+            return signature;
+        }
+
+        protected string ByteToString(byte[] buff)
+        {
+            string str = "";
+            foreach (byte num in buff)
+                str += num.ToString("X2");
+            return str;
+        }
 
         private async Task<ApiResponse<T>> GetApiJsonResult<T>(string baseApiUrl, MethodType type = MethodType.GET, string data = null)
         {
@@ -36,7 +50,7 @@ namespace ElrondConsoleLibrary
             {
                 HttpWebRequest httpWebRequest = WebRequest.CreateHttp(url);
                 httpWebRequest.Method = type.ToString();
-                httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+                httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Accept = "application/json";
 
                 if (type != MethodType.GET && data != null)
@@ -224,6 +238,50 @@ namespace ElrondConsoleLibrary
             else
             {
                 CreateResponseError(ref response, "Shard Id and Block number are empties!");
+            }
+
+            return response;
+        }
+
+        public async Task<ApiResponse<TransactionSendModel>> SendTransaction(string nonce, string value, string sender, string receiver, string gasPrice, string gasLimit, string signature, string message = null)
+        {
+            ApiResponse<TransactionSendModel> response = new ApiResponse<TransactionSendModel>();
+
+            if (!string.IsNullOrEmpty(nonce) && 
+                !string.IsNullOrEmpty(value) && 
+                !string.IsNullOrEmpty(sender) &&
+                !string.IsNullOrEmpty(receiver) &&
+                !string.IsNullOrEmpty(gasPrice) &&
+                !string.IsNullOrEmpty(gasLimit) &&
+                !string.IsNullOrEmpty(signature)
+            )
+            {
+                string url = CombineUrl($"transaction/send");
+                StringBuilder data = new StringBuilder();
+                
+                data.Append($"\"nonce\":{nonce}");
+                data.Append($",\"value\":\"{value}\"");
+                data.Append($",\"sender\":\"{sender}\"");
+                data.Append($",\"receiver\":\"{receiver}\"");
+                data.Append($",\"gasPrice\":{gasPrice}");
+                data.Append($",\"gasLimit\":{gasLimit}");
+                data.Append($",\"data\":\"{message}\"");
+
+                StringBuilder data2 = new StringBuilder();
+                data2.Append($"{{");
+                data2.Append(data);
+                //TODO: Find how create the signature
+                data2.Append($",\"signature\":\"{signature}\"");
+                data2.Append("}}");
+
+                //TOTO: it's a test but not good
+                string signatureTestCreation = GetSignature(data.ToString());
+
+                response = await GetApiJsonResult<TransactionSendModel>(url, MethodType.POST, data.ToString());
+            }
+            else
+            {
+                CreateResponseError(ref response, "Some values are empties!");
             }
 
             return response;

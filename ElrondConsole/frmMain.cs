@@ -20,6 +20,12 @@ namespace ElrondConsole
                 txtAccountAddress.Text = Properties.Settings.Default.ErdAddress;
             if (!string.IsNullOrEmpty(Properties.Settings.Default.NodeName))
                 txtNodeName.Text = Properties.Settings.Default.NodeName;
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.BlockNumber))
+                txtBlockNumber.Text = Properties.Settings.Default.BlockNumber;
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.BlockShardId))
+                txtBlockShardId.Text = Properties.Settings.Default.BlockShardId;
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.TransactionHash))
+                txtTransactionHash.Text = Properties.Settings.Default.TransactionHash;
         }
 
         private async void btnConnect_Click(object sender, EventArgs e)
@@ -53,6 +59,11 @@ namespace ElrondConsole
         private async void btnGetDetailTransaction_Click(object sender, EventArgs e)
         {
             var result = await _service.GetDetailTransaction(txtTransactionHash.Text);
+            if (!result.IsError)
+            {
+                Properties.Settings.Default.TransactionHash = txtTransactionHash.Text;
+                Properties.Settings.Default.Save();
+            }
             DisplayResult(result);
         }
 
@@ -101,6 +112,49 @@ namespace ElrondConsole
         private async void btnGetBlock_Click(object sender, EventArgs e)
         {
             var result = await _service.GetBlock(txtBlockShardId.Text, txtBlockNumber.Text);
+            if (!result.IsError)
+            {
+                //I save the node name
+                Properties.Settings.Default.BlockNumber = txtBlockNumber.Text;
+                Properties.Settings.Default.BlockShardId = txtBlockShardId.Text;
+                Properties.Settings.Default.Save();
+            }
+            DisplayResult(result);
+        }
+
+        private void txtBlockNumber_TextChanged(object sender, EventArgs e)
+        {
+            this.AcceptButton = btnGetBlock;
+        }
+
+        private void txtNodeName_TextChanged(object sender, EventArgs e)
+        {
+            this.AcceptButton = btnGetNodeHearBeat;
+        }
+
+        private void txtShardId_TextChanged(object sender, EventArgs e)
+        {
+            this.AcceptButton = btnGetShardStatus;
+        }
+
+        private void txtTransactionHash_TextChanged(object sender, EventArgs e)
+        {
+            this.AcceptButton = btnGetDetailTransaction;
+        }
+
+        private void txtAccountAddress_TextChanged(object sender, EventArgs e)
+        {
+            this.AcceptButton = btnConnect;
+        }
+
+        private void txtBlockShardId_TextChanged(object sender, EventArgs e)
+        {
+            this.AcceptButton = btnGetBlock;
+        }
+
+        private async void btnTransactionSend_Click(object sender, EventArgs e)
+        {
+            var result = await _service.SendTransaction(txtNonce.Text, txtValue.Text, txtSender.Text, txtReceiver.Text, txtGasPrice.Text, txtGasLimit.Text, txtSignature.Text, txtData.Text);
             DisplayResult(result);
         }
     }

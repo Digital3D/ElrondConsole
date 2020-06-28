@@ -46,5 +46,41 @@ namespace ElrondConsole.Properties {
                 this["NodeName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BlockNumber {
+            get {
+                return ((string)(this["BlockNumber"]));
+            }
+            set {
+                this["BlockNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BlockShardId {
+            get {
+                return ((string)(this["BlockShardId"]));
+            }
+            set {
+                this["BlockShardId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TransactionHash {
+            get {
+                return ((string)(this["TransactionHash"]));
+            }
+            set {
+                this["TransactionHash"] = value;
+            }
+        }
     }
 }
