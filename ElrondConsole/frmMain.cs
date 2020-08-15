@@ -154,8 +154,14 @@ namespace ElrondConsole
 
         private async void btnTransactionSend_Click(object sender, EventArgs e)
         {
-            var result = await _service.SendTransaction(txtNonce.Text, txtValue.Text, txtSender.Text, txtReceiver.Text, txtGasPrice.Text, txtGasLimit.Text, txtSignature.Text, txtData.Text);
+            var result = await _service.SendTransaction(txtNonce.Text, txtValue.Text, txtSender.Text, txtReceiver.Text, txtGasPrice.Text, txtGasLimit.Text, txtData.Text);
             DisplayResult(result);
+        }
+
+        private void TextBoxTextChanged(object sender, EventArgs e)
+        {
+            string signature = _service.CreateSignature(txtNonce.Text, txtValue.Text, txtSender.Text, txtReceiver.Text, txtGasPrice.Text, txtGasLimit.Text, txtData.Text);
+            txtSignature.Text = signature;
         }
     }
 }

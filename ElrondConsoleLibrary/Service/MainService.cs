@@ -2,12 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ElrondConsoleLibrary.Model;
 using Newtonsoft.Json;
 using NLog;
+using Rebex.Security.Cryptography;
 
 namespace ElrondConsoleLibrary
 {
@@ -16,21 +17,6 @@ namespace ElrondConsoleLibrary
     {
         private string _apiUrl = "https://api.elrond.com";
         private Logger _log = LogManager.GetCurrentClassLogger();
-
-        public string GetSignature(string parameters)
-        {
-            byte[] originalData = Encoding.ASCII.GetBytes(parameters);
-            string signature = ByteToString(originalData);
-            return signature;
-        }
-
-        protected string ByteToString(byte[] buff)
-        {
-            string str = "";
-            foreach (byte num in buff)
-                str += num.ToString("X2");
-            return str;
-        }
 
         private async Task<ApiResponse<T>> GetApiJsonResult<T>(string baseApiUrl, MethodType type = MethodType.GET, string data = null)
         {
@@ -78,6 +64,7 @@ namespace ElrondConsoleLibrary
                                 {
                                     response.Result = DeserializeObject<T>(resp);
                                     response.ResultJson = JsonConvert.SerializeObject(response.Result, Formatting.Indented);
+                                    response.ResultRawJson = resp;
                                 }
                             }
                         }
@@ -212,7 +199,7 @@ namespace ElrondConsoleLibrary
                 response = await GetHeartBeatStatus();
                 if (!response.IsError)
                 {
-                    response.Result.Message = response.Result.Message.Where(x => x.NodeDisplayName.ToLower().Contains(name.ToLower())).ToList();
+                    response.Result.Data.Heartbeats = response.Result.Data?.Heartbeats?.Where(x => x.NodeDisplayName.ToLower().Contains(name.ToLower())).ToList();
                     response.ResultJson = JsonConvert.SerializeObject(response.Result, Formatting.Indented);
                 }
 
@@ -243,7 +230,7 @@ namespace ElrondConsoleLibrary
             return response;
         }
 
-        public async Task<ApiResponse<TransactionSendModel>> SendTransaction(string nonce, string value, string sender, string receiver, string gasPrice, string gasLimit, string signature, string message = null)
+        public async Task<ApiResponse<TransactionSendModel>> SendTransaction(string nonce, string value, string sender, string receiver, string gasPrice, string gasLimit, string message = null)
         {
             ApiResponse<TransactionSendModel> response = new ApiResponse<TransactionSendModel>();
 
@@ -252,32 +239,31 @@ namespace ElrondConsoleLibrary
                 !string.IsNullOrEmpty(sender) &&
                 !string.IsNullOrEmpty(receiver) &&
                 !string.IsNullOrEmpty(gasPrice) &&
-                !string.IsNullOrEmpty(gasLimit) &&
-                !string.IsNullOrEmpty(signature)
+                !string.IsNullOrEmpty(gasLimit)
             )
             {
                 string url = CombineUrl($"transaction/send");
                 StringBuilder data = new StringBuilder();
-                
+
                 data.Append($"\"nonce\":{nonce}");
                 data.Append($",\"value\":\"{value}\"");
                 data.Append($",\"sender\":\"{sender}\"");
                 data.Append($",\"receiver\":\"{receiver}\"");
                 data.Append($",\"gasPrice\":{gasPrice}");
                 data.Append($",\"gasLimit\":{gasLimit}");
-                data.Append($",\"data\":\"{message}\"");
+                if (!string.IsNullOrEmpty(message))
+                    data.Append($",\"data\":\"{Base64Encode(message)}\""); //Zm9yIHRoZSBib29r
+                data.Append($",\"chainID\":\"v1.0.141\"");
+                data.Append($",\"version\":1");
 
                 StringBuilder data2 = new StringBuilder();
                 data2.Append($"{{");
                 data2.Append(data);
-                //TODO: Find how create the signature
-                data2.Append($",\"signature\":\"{signature}\"");
+                //TODO: To Verify, actually I cannot really test
+                data2.Append($",\"signature\":\"{CreateSignature(nonce, value, sender, receiver, gasPrice, gasLimit, message)}\"");
                 data2.Append("}}");
 
-                //TOTO: it's a test but not good
-                string signatureTestCreation = GetSignature(data.ToString());
-
-                response = await GetApiJsonResult<TransactionSendModel>(url, MethodType.POST, data.ToString());
+                response = await GetApiJsonResult<TransactionSendModel>(url, MethodType.POST, data2.ToString());
             }
             else
             {
@@ -300,6 +286,65 @@ namespace ElrondConsoleLibrary
         }
 
 
+        public string CreateSignature(string nonce, string value, string sender, string receiver, string gasPrice, string gasLimit, string message = null)
+        {
+            StringBuilder data = new StringBuilder("{");
+            data.Append($"\"nonce\":{nonce}");
+            data.Append($",\"value\":\"{value}\"");
+            data.Append($",\"sender\":\"{sender}\"");
+            data.Append($",\"receiver\":\"{receiver}\"");
+            data.Append($",\"gasPrice\":{gasPrice}");
+            data.Append($",\"gasLimit\":{gasLimit}");
+            if(!string.IsNullOrEmpty(message))
+                data.Append($",\"data\":\"{Base64Encode(message)}\"");
+            data.Append($",\"chainID\":\"v1.0.141\"");
+            data.Append($",\"version\":1");
+            data.Append("}");
+            byte[] byteMessage = Encoding.UTF8.GetBytes(data.ToString().Replace(" ",""));
 
+            Ed25519 ed = new Ed25519();
+            //TODO: Impossible to know if it's ok like that, transaction always return "Forbidden"
+            byte[] privateKeyBytes = GetBytesFromPEM(Path.Combine(Environment.CurrentDirectory, "validatorKey.pem"));
+            ed.FromSeed(privateKeyBytes);
+            byte[] result = ed.SignMessage(byteMessage);
+            
+            string s2 = BitConverter.ToString(result);
+            String[] tempAry = s2.Split('-');
+            string signature = String.Join("", tempAry);
+
+            return signature;
+        }
+
+        /// <summary>
+        /// Read a PEM file
+        /// </summary>
+        /// <param name="pemFileName">PEM FileName</param>
+        /// <returns>Return 32 first bytes</returns>
+        private byte[] GetBytesFromPEM(string pemFileName)
+        {
+            string pemString = "";
+            using (StreamReader f = new StreamReader(pemFileName, Encoding.UTF8))
+            {
+                pemString = f.ReadToEnd();
+            }
+
+            pemString = Regex.Replace(pemString, "^-----BEGIN.*?-----\r*\n*$", "", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+            pemString = Regex.Replace(pemString, "^-----END.*?-----\r*\n*$", "", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+            pemString = Regex.Replace(pemString, "\r*\n*$", "", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+
+            return Convert.FromBase64String(pemString).ToList().Take(32).ToArray();
+        }
+
+        public string Base64Encode(string plainText)
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
+        }
+
+        public static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
+            return Encoding.UTF8.GetString(base64EncodedBytes);
+        }
     }
 }

@@ -2,7 +2,9 @@
 {
     public class ShardStatusModel
     {
-        public ShardStatus Message { get; set; }
+        public ShardStatus Data { get; set; }
+        public string Error { get; set; }
+        public string Code { get; set; }
     }
 
     public class ShardStatus

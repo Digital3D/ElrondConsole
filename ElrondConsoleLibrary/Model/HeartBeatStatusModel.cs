@@ -4,7 +4,14 @@ namespace ElrondConsoleLibrary.Model
 {
     public class HeartBeatStatusModel
     {
-        public List<HeartBeatStatus> Message { get; set; }
+        public HeartBeatStatusData Data { get; set; }
+        public string Error { get; set; }
+        public string Code { get; set; }
+    }
+
+    public class HeartBeatStatusData
+    {
+        public List<HeartBeatStatus> Heartbeats { get; set; }
     }
 
     public class HeartBeatStatus

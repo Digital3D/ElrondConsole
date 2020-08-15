@@ -2,10 +2,12 @@
 {
     public class NetworkConfigModel
     {
-        public ConfigModel Message { get; set; }
+        public ConfigModelData Data { get; set; }
+        public string Error { get; set; }
+        public string Code { get; set; }
     }
 
-    public class ConfigModel
+    public class ConfigModelData
     {
         public NetworkConfig Config { get; set; }
     }

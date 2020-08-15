@@ -4,10 +4,17 @@ namespace ElrondConsoleLibrary.Model
 {
     public class AccountTransactionModel
     {
-        public List<Transaction> Transactions { get; set; }
+        public TransactionData Data { get; set; }
+        public string Error { get; set; }
+        public string Code { get; set; }
     }
 
-    public class Transaction
+    public class TransactionData
+    {
+        public List<TransactionModel> Transactions { get; set; }
+    }
+
+    public class TransactionModel
     {
         public string Hash { get; set; }
         public string Fee { get; set; }
