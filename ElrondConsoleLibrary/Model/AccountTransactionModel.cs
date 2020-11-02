@@ -19,7 +19,7 @@ namespace ElrondConsoleLibrary.Model
         public string Hash { get; set; }
         public string Fee { get; set; }
         public string MiniBlockHash { get; set; }
-        public string Nonce { get; set; }
+        public long Nonce { get; set; }
         public string Round { get; set; }
         public string Value { get; set; }
         public string Receiver { get; set; }
@@ -33,6 +33,20 @@ namespace ElrondConsoleLibrary.Model
         public string Signature { get; set; }
         public long Timestamp { get; set; }
         public string Status { get; set; }
-        public string ScResults { get; set; }
+        public List<ScResult> ScResults { get; set; }
+    }
+
+    public class ScResult
+    {
+        public long Nonce { get; set; }
+        public long GasLimit { get; set; }
+        public long GasPrice { get; set; }
+        public string Value { get; set; }
+        public string Receiver { get; set; }
+        public string Sender { get; set; }
+        public string PrevTxHash { get; set; }
+        public string CallType { get; set; }
+
     }
 }
+

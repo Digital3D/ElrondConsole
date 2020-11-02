@@ -1,25 +1,22 @@
-﻿using System.Runtime.Serialization;
-using Newtonsoft.Json;
-
-namespace ElrondConsoleLibrary.Model
+﻿namespace ElrondConsoleLibrary.Model
 {
-    public class AccountModel
+    public class AddressModel
     {
-        public AccountData Data { get; set; }
+        public AddressData Data { get; set; }
         public string Error { get; set; }
         public string Code { get; set; }
 
     }
 
-    public class AccountData
+    public class AddressData
     {
-        public AccountAddressModel Account { get; set; }
+        public AddressAccountData Account { get; set; }
     }
 
-    public class AccountAddressModel
+    public class AddressAccountData
     {
         public string Address { get; set; }
-        public int Nonce { get; set; }
+        public long Nonce { get; set; }
         public string Balance { get; set; }
         public string Code { get; set; }
         public string CodeHash { get; set; }

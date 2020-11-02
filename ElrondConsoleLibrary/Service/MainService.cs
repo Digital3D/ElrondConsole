@@ -12,9 +12,10 @@ using Rebex.Security.Cryptography;
 
 namespace ElrondConsoleLibrary
 {
-
+	//FROM API: https://github.com/ElrondNetwork/elrond-go/tree/master/api
     public class MainService
     {
+        //private string _apiUrl = "https://api-testnet.elrond.com";
         private string _apiUrl = "https://api.elrond.com";
         private Logger _log = LogManager.GetCurrentClassLogger();
 
@@ -31,7 +32,7 @@ namespace ElrondConsoleLibrary
 
             response.Url = url;
             response.Data = data;
-
+            string resultJson = "";
             try
             {
                 HttpWebRequest httpWebRequest = WebRequest.CreateHttp(url);
@@ -59,12 +60,12 @@ namespace ElrondConsoleLibrary
                         {
                             if (stream != null)
                             {
-                                string resp = await new StreamReader(stream).ReadToEndAsync();
-                                if (!string.IsNullOrEmpty(resp))
+                                resultJson = await new StreamReader(stream).ReadToEndAsync();
+                                if (!string.IsNullOrEmpty(resultJson))
                                 {
-                                    response.Result = DeserializeObject<T>(resp);
+                                    response.Result = DeserializeObject<T>(resultJson);
                                     response.ResultJson = JsonConvert.SerializeObject(response.Result, Formatting.Indented);
-                                    response.ResultRawJson = resp;
+                                    response.ResultRawJson = resultJson;
                                 }
                             }
                         }
@@ -74,6 +75,7 @@ namespace ElrondConsoleLibrary
             catch (WebException ex)
             {
                 response.IsError = true;
+                response.ResultJson = resultJson;
                 var resp = await new StreamReader(ex.Response.GetResponseStream()).ReadToEndAsync();
 
                 dynamic obj = JsonConvert.DeserializeObject(resp);
@@ -83,6 +85,7 @@ namespace ElrondConsoleLibrary
             catch (Exception ex)
             {
                 response.IsError = true;
+                response.ResultJson = resultJson;
                 response.Message = ex.Message;
                 if (ex.InnerException != null)
                     response.Message += " - " + ex.InnerException.Message;
@@ -105,15 +108,15 @@ namespace ElrondConsoleLibrary
         }
 
 
-        public async Task<ApiResponse<AccountModel>> GetInformationElrondAddress(string erdAddress)
+        public async Task<ApiResponse<AddressModel>> GetInformationElrondAddress(string erdAddress)
         {
-            ApiResponse<AccountModel> response = new ApiResponse<AccountModel>();
+            ApiResponse<AddressModel> response = new ApiResponse<AddressModel>();
             
             if (!string.IsNullOrEmpty(erdAddress))
             {
                 string url = CombineUrl($"address/{erdAddress}");
 
-                response = await GetApiJsonResult<AccountModel>(url, MethodType.GET);
+                response = await GetApiJsonResult<AddressModel>(url, MethodType.GET);
             }
             else
             {
@@ -199,7 +202,7 @@ namespace ElrondConsoleLibrary
                 response = await GetHeartBeatStatus();
                 if (!response.IsError)
                 {
-                    response.Result.Data.Heartbeats = response.Result.Data?.Heartbeats?.Where(x => x.NodeDisplayName.ToLower().Contains(name.ToLower())).ToList();
+                    response.Result.Data.Heartbeats = response.Result.Data?.Heartbeats?.Where(x => x.NodeDisplayName != null && x.NodeDisplayName.ToLower().Contains(name.ToLower())).ToList();
                     response.ResultJson = JsonConvert.SerializeObject(response.Result, Formatting.Indented);
                 }
 
@@ -253,7 +256,7 @@ namespace ElrondConsoleLibrary
                 data.Append($",\"gasLimit\":{gasLimit}");
                 if (!string.IsNullOrEmpty(message))
                     data.Append($",\"data\":\"{Base64Encode(message)}\""); //Zm9yIHRoZSBib29r
-                data.Append($",\"chainID\":\"v1.0.141\"");
+                data.Append($",\"chainID\":\"1\"");
                 data.Append($",\"version\":1");
 
                 StringBuilder data2 = new StringBuilder();
@@ -297,7 +300,7 @@ namespace ElrondConsoleLibrary
             data.Append($",\"gasLimit\":{gasLimit}");
             if(!string.IsNullOrEmpty(message))
                 data.Append($",\"data\":\"{Base64Encode(message)}\"");
-            data.Append($",\"chainID\":\"v1.0.141\"");
+            data.Append($",\"chainID\":\"1\"");
             data.Append($",\"version\":1");
             data.Append("}");
             byte[] byteMessage = Encoding.UTF8.GetBytes(data.ToString().Replace(" ",""));
