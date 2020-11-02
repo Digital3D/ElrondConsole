@@ -250,8 +250,8 @@ namespace ElrondConsoleLibrary
 
                 data.Append($"\"nonce\":{nonce}");
                 data.Append($",\"value\":\"{value}\"");
-                data.Append($",\"sender\":\"{sender}\"");
                 data.Append($",\"receiver\":\"{receiver}\"");
+                data.Append($",\"sender\":\"{sender}\"");
                 data.Append($",\"gasPrice\":{gasPrice}");
                 data.Append($",\"gasLimit\":{gasLimit}");
                 if (!string.IsNullOrEmpty(message))
@@ -294,8 +294,8 @@ namespace ElrondConsoleLibrary
             StringBuilder data = new StringBuilder("{");
             data.Append($"\"nonce\":{nonce}");
             data.Append($",\"value\":\"{value}\"");
-            data.Append($",\"sender\":\"{sender}\"");
             data.Append($",\"receiver\":\"{receiver}\"");
+            data.Append($",\"sender\":\"{sender}\"");
             data.Append($",\"gasPrice\":{gasPrice}");
             data.Append($",\"gasLimit\":{gasLimit}");
             if(!string.IsNullOrEmpty(message))
